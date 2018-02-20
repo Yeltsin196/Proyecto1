@@ -1,8 +1,8 @@
 <?php session_start();
 	$fil=$_SESSION["filas"];
 	$col=$_SESSION["columnas"];
-	$jugador=1;
-	$contrario=2;
+	$jugador= $_SESSION["turnos"];
+	$contrario=$_SESSION["contrario"];
 	global $fil, $col , $jugador, $contrario;
 	
  ?>
@@ -24,17 +24,22 @@
 				//$_SESSION["matriz"][$_GET["fil"]][$_GET["col"]]=;
 
 				// previsualizar si gano !
-				function borrar(){
-					for ($i=0; $i < $_SESSION["fil"]; $i++) { 
-						# code...
-						for ($j=0; $j < $_SESSION["col"]; $j++) { 
-							# code...
-							if($_SESSION["matriz"][$x][$y]==3){
-								$_SESSION["matriz"][$x][$y]=0;
+
+			 function borrar(){
+					for ($i=0; $i < $_SESSION["filas"]; $i++) { 
+											# code...
+							for ($j=0; $j < $_SESSION["columnas"]; $j++) { 
+												# code...
+									if($_SESSION["matriz"][$i][$j]==3){
+													$_SESSION["matriz"][$i][$j]=0;
+									}
 							}
-						}
 					}
-				}
+
+
+			 }
+					
+			
 
 				function buscarfin( $x, $y, $jugador,  $contrario, $cadena){
 					if($cadena=="derecha" && $y+1<$_GET["fil"]){
@@ -82,28 +87,31 @@
 							}
 
 
-				$x=$_GET["fil"];
-				$y=$_GET["col"];
+					$x=$_GET["fil"];
+					$y=$_GET["col"];
 					if($_SESSION["matriz"][$x][$y]==3){
-							$_SESSION["matriz"][$x][$y]=$jugador;
-							if(buscarfin( $x, $y, $jugador,$contrario,"derecha")){
-								cambiarderecha($x, $y,$jugador,$contrario);
+
+							$_SESSION["matriz"][$x][$y]=$_SESSION["turnos"];
+
+							if(buscarfin( $x, $y, $_SESSION["turnos"],$_SESSION["contrario"],"derecha")){
+								cambiarderecha($x, $y,$_SESSION["turnos"],$_SESSION["contrario"]);
 							
 
-							}else if(buscarfin( $x, $y, $jugador,$contrario,"izquierda")){
-								cambiarizq($x,$y,$jugador,$contrario);
+							}else if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"izquierda")){
+								cambiarizq($x,$y,$_SESSION["turnos"],$_SESSION["contrario"]);
 							}
 
-							if($jugador==1){
-								$jugador=2;
-								$contrario=1;
-								borrar();
+						borrar();
+						if($jugador==1){
+										$_SESSION["turnos"]=2;
+										$_SESSION["contrario"]=1;
+										//borrar();
 
-							}else{
-								$jugador=1;
-								$contrario=2;
-								borrar();
-							}
+									}else if($jugador==2){
+										$_SESSION["turnos"]=1;
+										$_SESSION["contrario"]=2;
+									//	borrar();
+									}	
 					}
 						
 						/*if(buscarfin( $x, $y, $jugador,$contrario,"derecha")){
@@ -128,8 +136,8 @@
 							# code...
 								if($_SESSION["matriz"][$i][$j]==$jugador){
 										 $band=false;
-									buscard( $i,$j, $jugador , $contrario, $band);
-									buscarizq( $i,$j, $jugador , $contrario, $band);
+									buscard( $i,$j, $_SESSION["turnos"] , $_SESSION["contrario"], $band);
+									buscarizq( $i,$j, $_SESSION["turnos"] , $_SESSION["contrario"], $band);
 
 
 								}
@@ -205,7 +213,19 @@
 					                 echo "</tr>"; 
 					              // echo "<br>";
 					        }
-			                
+			                for($i=0;$i<$fil;$i++){
+					                for($j=0;$j<$col;$j++){
+
+					           
+
+						                //  echo "<td height='0' width='0'> <a onclick='cargar(".$i.",".$j.");'> <img src=".$_SESSION["matriz"][$i][$j].".jpg /></img></td>"; 
+
+						            echo $_SESSION["matriz"][$i][$j]. " " ; 
+					                }
+					                // echo "</tr>"; 
+					               echo "<br>";
+					        }
+
 			             ?>	 	
 			  
 
