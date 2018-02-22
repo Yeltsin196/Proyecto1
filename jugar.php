@@ -42,55 +42,122 @@
 			
 
 				function buscarfin( $x, $y, $jugador,  $contrario, $cadena){
-					if($cadena=="derecha" && $y+1<$_GET["fil"]){
+					if($cadena=="derecha" && $y+1<$_SESSION["filas"]){
 						do{	
 							$y++;
-							if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $y<$_GET["fil"]){
+							if($y<$_SESSION["filas"]){
+								if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] ){
 								return true;
-							}
+									}
+								}else{ break;}
+							
 						
-						}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $y<$_GET["fil"]);
+						}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $y<$_SESSION["filas"]);
 						return false;
 					}else if($cadena=="izquierda" && $y-1>=0){
 
 							do{	
 								$y--;
-								if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $y>=0){
-									return true;
+								if($y>=0){
+										if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] ){
+											return true;
+										}	
+								}else{
+									break;
 								}
+								
 							
 							}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $y>=0);
 							return false;
 
 					}else if($cadena=="arriba" && $x-1>=0){
-/*
+
 							do{	
-								$y--;
-								if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $y>=0){
+								$x--;
+								if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $x>=0){
 									return true;
 								}
 							
-							}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $y>=0);
-							return false;*/
+							}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x>=0);
+							return false;
 
 					}else if($cadena=="abajo" && $x+1<$_SESSION["filas"]){
 
 							do{	
 								$x++;
-								if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $x<$_SESSION["filas"]){
-									return true;
-								}
+								 if( $x<$_SESSION["filas"]){
+									if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"]){
+												return true;
+											}
+								 }else{
+								 		break;
+								 }
+								
 							
 							}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x<$_SESSION["filas"]);
 							return false;
 
-					}
-				}
+					}else if($cadena=="diagonal arriba1" && $x-1>=0 && $y-1>=0){
+										do{
+										$x--;
+										$y--;
+									if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $x>=0 && $y>=0){
+											return true;
+										}
+									
+									}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x>=0 && $y>=0);
+									return false;
+					}else if($cadena=="diagonal abajo1" && $x+1<$_SESSION["filas"]&& $y-1>=0){
+									do{
+									$x++;
+									$y--;
+									if($x+1<$_SESSION["filas"]&& $y-1>=0){
+										if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] ){
+										
+											return true;
+										}
+									}
+									
+									
+									}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x+1<$_SESSION["filas"]&& $y-1>=0 );
+								
+									return false;
+					}else if($cadena=="diagonal arriba2" && $x-1>=0 && $y+1<$_SESSION["filas"]){
+								do{
+									$x--;
+									$y++;
+									if($x>=0 && $y<$_SESSION["columnas"]){
+									if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] ){
+											return true;
+										}	
+									}else{
+										break;
+									}
+									
+									
+									}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x>=0 && $y<$_SESSION["columnas"]);
+									return false;
+						}else if($cadena=="diagonal abajo2" && $x+1<$_SESSION["filas"] && $y+1<$_SESSION["columnas"]){
+									do{	
+									$x++;
+									$y++;
+										if($x<$_SESSION["filas"] && $y<$_SESSION["columnas"]){
+											if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] ){
+												return true;
+											}	
+										}
+
+										
+									
+									}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x<$_SESSION["filas"] && $y<$_SESSION["columnas"]);
+									return false;
+							}
+						}
 
 							function cambiarderecha($x, $y, $jugador, $contrario){
-								if($y+1<$_GET["fil"]){
-										if($_SESSION["matriz"][$y+1]==$_SESSION["contrario"]){
-											$_SESSION["matriz"][$y+1]=$_SESSION["turnos"];
+								if($y+1<$_SESSION["columnas"]){
+										if($_SESSION["matriz"][$x][$y+1]==$_SESSION["contrario"]){
+											$_SESSION["matriz"][$x][$y+1]=$_SESSION["turnos"];
 											cambiarderecha($x,$y+1,$_SESSION["turnos"],$_SESSION["contrario"]);
 										}
 										
@@ -108,10 +175,10 @@
 								}
 							}
 							function cambiarabajo($x, $y,$jugador, $contrario){
-								if($x+1<$_SESSION["col"]){
+								if($x+1<$_SESSION["filas"] ){
 									if($_SESSION["matriz"][$x+1][$y]==$_SESSION["contrario"]){
 										$_SESSION["matriz"][$x+1][$y]=$_SESSION["turnos"];	
-										cambiararriba($x+1,$y,$_SESSION["turnos"],$_SESSION["contrario"]);
+										cambiarabajo($x+1,$y,$_SESSION["turnos"],$_SESSION["contrario"]);
 								
 									}
 								}
@@ -125,8 +192,34 @@
 									}
 								}
 							}
-
-
+							function cambiardiagonales($x, $y,$jugador, $contrario,  $cadena){
+									if($x-1>=0 && $y-1>=0 && $cadena=="diagonal arriba1"){
+									if($_SESSION["matriz"][$x-1][$y-1]==$_SESSION["contrario"]){
+										$_SESSION["matriz"][$x-1][$y-1]=$_SESSION["turnos"];	
+										cambiardiagonales( $x-1,$y-1,$_SESSION["turnos"],$_SESSION["contrario"], "diagonal arriba1");
+										}
+									}else if($x+1<$_SESSION["filas"]&& $y-1>=0 && $cadena=="diagonal abajo1"){ 
+											if($_SESSION["matriz"][$x+1][$y-1]==$_SESSION["contrario"]){
+												$_SESSION["matriz"][$x+1][$y-1]=$_SESSION["turnos"];	
+												cambiardiagonales($x+1,$y-1,$_SESSION["turnos"],$_SESSION["contrario"], "diagonal abajo1");
+											}
+												
+									}else if($x-1>=0 && $y+1<$_SESSION["columnas"] && $cadena=="diagonal arriba2"){
+										
+										if($_SESSION["matriz"][$x-1][$y+1]==$_SESSION["contrario"]){
+												$_SESSION["matriz"][$x-1][$y+1]=$_SESSION["turnos"];	
+												cambiardiagonales( $x-1,$y+1,$_SESSION["turnos"],$_SESSION["contrario"], "diagonal arriba2");
+											}
+											
+										
+									}else if($x+1<$_SESSION["filas"] && $y+1<$_SESSION["columnas"] && $cadena=="diagonal abajo2"){
+										if($_SESSION["matriz"][$x+1][$y+1]==$_SESSION["contrario"]){
+												$_SESSION["matriz"][$x+1][$y+1]=$_SESSION["turnos"];;	
+												cambiardiagonales( $x+1,$y+1,$_SESSION["turnos"],$_SESSION["contrario"], "diagonal abajo2");
+											}
+									}	
+							}
+						
 					$x=$_GET["fil"];
 					$y=$_GET["col"];
 					if($_SESSION["matriz"][$x][$y]==3){
@@ -134,15 +227,36 @@
 							$_SESSION["matriz"][$x][$y]=$_SESSION["turnos"];
 						//	echo $x." ".$y."<br>";
 							if(buscarfin( $x, $y, $_SESSION["turnos"],$_SESSION["contrario"],"derecha")){
+								
 								cambiarderecha($x, $y,$_SESSION["turnos"],$_SESSION["contrario"]);
+							}
+							if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"izquierda")){
 							
-
-							}else if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"izquierda")){
 								cambiarizq($x,$y,$_SESSION["turnos"],$_SESSION["contrario"]);
-							}else if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"arriba")){
+							}
+							 if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"arriba")){
+								
 									cambiararriba($x,$y,$_SESSION["turnos"], $_SESSION["contrario"]);
-							}else if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"abajo")){
+							}
+							 if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"abajo")){
+								
 								cambiarabajo($x,$y,$_SESSION["turnos"], $_SESSION["contrario"]);
+							}
+							 if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"diagonal arriba1")){
+								
+								cambiardiagonales($x,$y,$_SESSION["turnos"], $_SESSION["contrario"], "diagonal arriba1");
+							}
+							 if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"diagonal abajo1")){
+								echo "buscar fin true <br>";
+								cambiardiagonales($x,$y,$_SESSION["turnos"], $_SESSION["contrario"], "diagonal abajo1");
+							}
+							 if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"diagonal arriba2")){
+										echo "buscar fin true arriba2<br>";
+							cambiardiagonales($x,$y,$_SESSION["turnos"], $_SESSION["contrario"],"diagonal arriba2");
+							}
+							 if(buscarfin( $x, $y, $_SESSION["turnos"] ,$_SESSION["contrario"],"diagonal abajo2")){
+							
+								cambiardiagonales($x,$y,$_SESSION["turnos"], $_SESSION["contrario"],"diagonal abajo2");
 							}
 
 						//borrar();
@@ -158,14 +272,10 @@
 									}	
 						}
 						borrar();
-						/*if(buscarfin( $x, $y, $jugador,$contrario,"derecha")){
-						//	cambiarderecha(matriz,x, y,jugador,contrario);
-
-						}*/
-				
+						
 			
 
-			}
+					}
 			
 		?>
 
@@ -181,9 +291,16 @@
 								if($_SESSION["matriz"][$i][$j]==$_SESSION["turnos"] ){
 										 $band=false;
 									buscard( $i,$j, $_SESSION["turnos"] , $_SESSION["contrario"], $band);
+									 $band=false;
 									buscarizq( $i,$j, $_SESSION["turnos"] , $_SESSION["contrario"], $band);
+									 $band=false;
 									buscararriba( $i,$j, $_SESSION["turnos"] , $_SESSION["contrario"], $band);
-
+									 $band=false;
+									buscarabajo($i,$j,$_SESSION["turnos"] , $_SESSION["contrario"], $band);
+									buscardiagonales($i,$j,$_SESSION["turnos"] , $_SESSION["contrario"], $band, 1);
+										buscardiagonales($i,$j,$_SESSION["turnos"] , $_SESSION["contrario"], $band, 2);
+											buscardiagonales($i,$j,$_SESSION["turnos"] , $_SESSION["contrario"], $band, 3);
+												buscardiagonales($i,$j,$_SESSION["turnos"] , $_SESSION["contrario"], $band, 4);
 								}
 
 						}
@@ -245,6 +362,71 @@
 													
 											}
 									}
+
+									function buscarabajo($x, $y, $jugador, $contrario, $band){
+										if($x+1<$_SESSION["columnas"]){
+											
+											if($_SESSION["matriz"][$x+1][$y]==$_SESSION["contrario"] ){
+												$band=true;
+											
+
+												buscarabajo( $x+1,$y,$_SESSION["turnos"] , $_SESSION["contrario"] , $band);
+												
+												}else if($_SESSION["matriz"][$x+1][$y]==0  && $band==true){
+													opcionesdejugada($x+1,$y);
+													
+												}
+													
+											}
+
+
+									}
+
+								function buscardiagonales( $x,  $y, $jugador, $contrario, $band, $tipo){
+
+
+								if($tipo==1){
+								if($x-1>=0 && $y-1>=0){
+									if($_SESSION["matriz"][$x-1][$y-1]==$_SESSION["contrario"]){
+										$band=true;
+										buscardiagonales( $x-1,$y-1, $jugador, $_SESSION["contrario"], $band,  1);
+										
+										}else if($_SESSION["matriz"][$x-1][$y-1]==0  && $band==true){
+											opcionesdejugada($x-1,$y-1);
+										}
+										
+									}	
+								}else if($tipo==2){
+									if($x+1<$_SESSION["filas"] && $y-1>=0){
+										if($_SESSION["matriz"][$x+1][$y-1]==$_SESSION["contrario"]){
+											$band=true;
+										buscardiagonales( $x+1,$y-1, $jugador,$_SESSION["contrario"], $band,  2);
+										}else if($_SESSION["matriz"][$x+1][$y-1]==0  && $band==true){
+											opcionesdejugada($x+1,$y-1);
+										}
+									}
+								}else if($tipo==3){
+									if($x-1>=0 && $y+1<$_SESSION["contrario"]){
+										if($_SESSION["matriz"][$x-1][$y+1]==$_SESSION["contrario"]){
+											$band=true;
+											buscardiagonales( $x-1,$y+1, $jugador, $_SESSION["contrario"], $band, 3);
+										}else if($_SESSION["matriz"][$x-1][$y+1]==0  && $band==true){
+											opcionesdejugada($x-1,$y+1);
+										}
+									}
+								}else if($tipo==4){
+									if($x+1<$_SESSION["filas"] && $y+1<$_SESSION["columnas"]){
+										if($_SESSION["matriz"][$x+1][$y+1]==$_SESSION["contrario"]){
+											$band=true;
+											buscardiagonales( $x+1,$y+1, $jugador, $contrario, $band, 4);
+										}else if($_SESSION["matriz"][$x+1][$y+1]==0  && $band==true){
+											opcionesdejugada($x+1,$y+1);
+										}
+									}
+								}
+								
+							}
+
 
 					function opcionesdejugada($x, $y){
 							$_SESSION["matriz"][$x][$y]=3;
