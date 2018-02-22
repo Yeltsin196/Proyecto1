@@ -29,6 +29,7 @@
 	$_SESSION["columnas"]=$columnas;
 	$_SESSION["turnos"]=$turno;	
 	$_SESSION["contrario"]=2;	
+	$_SESSION["bandera_fin"]=0;
 		for($i =0;$i<$filas;$i++){
 			for ($j=0; $j <$columnas; $j++) { 
 				# code...

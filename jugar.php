@@ -3,6 +3,7 @@
 	$col=$_SESSION["columnas"];
 	$jugador= $_SESSION["turnos"];
 	$contrario=$_SESSION["contrario"];
+
 	global $fil, $col , $jugador, $contrario;
 	
  ?>
@@ -12,9 +13,20 @@
 <head>
 	<title>Othello</title>
 
+	<style type="text/css">
+		h1{
+			padding: 20px;
+			background-color:#21C999;
+			color:white;
+			text-align:center;
+		}
+	</style>
 
 </head>
 <body>
+	<h1>Othello</h1>
+	
+
 	<div align="center">
 
 
@@ -101,9 +113,14 @@
 										do{
 										$x--;
 										$y--;
-									if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $x>=0 && $y>=0){
-											return true;
+										if($x>=0 && $y>=0){
+											if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] && $x>=0 && $y>=0){
+												return true;
+											}
+										}else{
+											break;
 										}
+									
 									
 									}while($_SESSION["matriz"][$x][$y]==$_SESSION["contrario"] && $x>=0 && $y>=0);
 									return false;
@@ -145,6 +162,8 @@
 											if($_SESSION["matriz"][$x][$y]==$_SESSION["turnos"] ){
 												return true;
 											}	
+										}else{
+											break;
 										}
 
 										
@@ -279,9 +298,7 @@
 			
 		?>
 
-		<?php 
-
-		
+		<?php
 			
 
 			for ($i=0; $i < $fil ; $i++) { 
@@ -308,6 +325,22 @@
 					
 				
 			}
+
+			
+					if($_SESSION["bandera_fin"]==0 || $_SESSION["bandera_fin"]==1){
+									if(!jugadas_disponibles()){
+										$_SESSION["bandera_fin"]++;
+									
+									}else{
+										if($_SESSION["bandera_fin"]>0) $_SESSION["bandera_fin"]--;
+										
+										
+									}
+					}else if($_SESSION["bandera_fin"]==2){
+						// se termina 
+						echo "Juego terminado <br>";
+					}
+				
 
 
 									function buscard($x, $y, $jugador, $contrario, $band){
@@ -433,6 +466,29 @@
 						//	echo "hola";
 					}
 
+				function jugadas_disponibles(){
+					$band=false;
+					for($i=0;$i<$_SESSION["filas"];$i++){
+						for($j=0;$j<$_SESSION["columnas"];$j++){
+							if($_SESSION["matriz"][$i][$j]==3){
+								$band=true;
+							}
+						}
+					}
+					if($band=false){
+						return false;
+					}else{
+
+						return true;
+					}
+								
+										
+									
+										
+									
+					
+					
+				}
 			
 					
 
